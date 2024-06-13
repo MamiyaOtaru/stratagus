@@ -108,8 +108,8 @@ void TitleScreen::ShowLabels()
 			continue;
 		}
 		// offsets are for 640x480, scale up to actual resolution
-		const int x = labels[i]->Xofs * Video.Width / 640;
-		const int y = labels[i]->Yofs * Video.Height / 480;
+		const int x = labels[i]->Xofs * Video.FourThreeWidth / 640 + (Video.Width - Video.FourThreeWidth)/2;
+		const int y = labels[i]->Yofs * Video.FourThreeHeight / 480 + (Video.Height - Video.FourThreeHeight)/2;
 		CLabel label(*labels[i]->Font);
 
 		if (labels[i]->Flags & TitleFlagCenter) {
@@ -146,13 +146,13 @@ void TitleScreen::ShowTitleImage()
 	CGraphic *g = CGraphic::New(this->File);
 	g->Load();
 	if (this->StretchImage) {
-		g->Resize(Video.Width, Video.Height);
+		g->Resize(Video.FourThreeWidth, Video.FourThreeHeight);
 	}
 
 	int timeout = this->Timeout ? this->Timeout * CYCLES_PER_SECOND : -1;
 
 	while (timeout-- && WaitNoEvent) {
-		g->DrawClip((Video.Width - g->Width) / 2, (Video.Height - g->Height) / 2);
+		g->DrawClip((Video.FourThreeWidth - g->Width) / 2 + (Video.Width - Video.FourThreeWidth) / 2, (Video.FourThreeHeight - g->Height) / 2 + (Video.Height - Video.FourThreeHeight) / 2);
 		this->ShowLabels();
 
 		Invalidate();

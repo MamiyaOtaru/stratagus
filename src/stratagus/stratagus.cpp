@@ -614,6 +614,7 @@ void ParseCommandLine(int argc, char **argv, Parameters &parameters)
 					Usage();
 					exit(-1);
 				}
+				Video.CalculateAspectRatioCorrectDimensions();
 				continue;
 			}
 			case 'W':
