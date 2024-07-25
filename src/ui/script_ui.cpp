@@ -372,18 +372,22 @@ static int CclSetTitleScreens(lua_State *l)
 			LuaError(l, "incorrect argument");
 		}
 		TitleScreens[j] = std::make_unique<TitleScreen>();
-		TitleScreens[j]->Iterations = 1;
 		lua_pushnil(l);
 		while (lua_next(l, j + 1)) {
 			const std::string_view value = LuaToString(l, -2);
 			if (value == "Image") {
 				TitleScreens[j]->File = LuaToString(l, -1);
+			} else if (value == "StretchMode") {
+				const std::string_view value = LuaToString(l, -1);
+				if (auto stretchMode = StretchModeFromString(value)) {
+					TitleScreens[j]->StretchMode = *stretchMode;
+				} else {
+					LuaError(l, "Unknown StretchMode %s", value.data());
+				}
 			} else if (value == "Music") {
 				TitleScreens[j]->Music = LuaToString(l, -1);
 			} else if (value == "Timeout") {
 				TitleScreens[j]->Timeout = LuaToNumber(l, -1);
-			} else if (value == "Iterations") {
-				TitleScreens[j]->Iterations = LuaToNumber(l, -1);
 			} else if (value == "Editor") {
 				TitleScreens[j]->Editor = LuaToNumber(l, -1);
 			} else if (value == "Labels") {
